@@ -5,19 +5,22 @@ import {
   SerializedError
 } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
+import { burgerConstructorActions } from '../burger-constructor/burgerConstructorSlice';
 
 type TOrdersState = {
   orderModalData: TOrder | null;
   orderRequest: boolean;
   orders: TOrder[] | [];
   error: SerializedError | null;
+  orderByNumberData: TOrder | null;
 };
 
 const initialState: TOrdersState = {
   orders: [],
   orderModalData: null,
   orderRequest: false,
-  error: null
+  error: null,
+  orderByNumberData: null
 };
 
 const orderSlice = createSlice({
@@ -31,7 +34,8 @@ const orderSlice = createSlice({
   selectors: {
     ordersSelector: (state) => state.orders,
     orderRequestSelector: (state) => state.orderRequest,
-    orderModalDataSelector: (state) => state.orderModalData
+    orderModalDataSelector: (state) => state.orderModalData,
+    orderByNumberDataSelector: (state) => state.orderByNumberData
   },
   extraReducers: (builder) => {
     builder
@@ -40,7 +44,7 @@ const orderSlice = createSlice({
       })
       .addCase(getOrderByNumber.fulfilled, (state, action) => {
         state.error = null;
-        state.orderModalData = action.payload.orders[0];
+        state.orderByNumberData = action.payload.orders[0];
       })
       .addCase(getOrderByNumber.rejected, (state, action) => {
         state.error = action.error;
@@ -82,10 +86,20 @@ export const getOrderByNumber = createAsyncThunk(
 
 export const createOrder = createAsyncThunk(
   'orders/createOrder',
-  async (data: string[]) => orderBurgerApi(data)
+  async (data: string[], { dispatch }) => {
+    const res = await orderBurgerApi(data);
+    if (res?.success) {
+      dispatch(burgerConstructorActions.resetConstructor());
+    }
+    return res;
+  }
 );
 
 export const { reducer: ordersReducer, actions: ordersActions } = orderSlice;
 
-export const { ordersSelector, orderModalDataSelector, orderRequestSelector } =
-  orderSlice.selectors;
+export const {
+  ordersSelector,
+  orderModalDataSelector,
+  orderRequestSelector,
+  orderByNumberDataSelector
+} = orderSlice.selectors;

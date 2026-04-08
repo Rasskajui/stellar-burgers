@@ -2,10 +2,7 @@ import { FC, useMemo } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useDispatch, useSelector } from '../../../src/services/store';
-import {
-  burgerConstructorActions,
-  getBurgerConstructorSelector
-} from '../../../src/services/slices/burger-constructor/burgerConstructorSlice';
+import { getBurgerConstructorSelector } from '../../../src/services/slices/burger-constructor/burgerConstructorSlice';
 import { useNavigate } from 'react-router-dom';
 import { userDataSelector } from '../../../src/services/slices/user/userSlice';
 import {
@@ -38,7 +35,6 @@ export const BurgerConstructor: FC = () => {
     ];
 
     dispatch(createOrder(data));
-    dispatch(burgerConstructorActions.resetConstructor());
   };
   const closeOrderModal = () => {
     dispatch(ordersActions.resetOrderModalData());

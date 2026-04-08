@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from '../../../src/services/store';
 import {
   getOrderByNumber,
-  orderModalDataSelector
+  orderByNumberDataSelector
 } from '../../../src/services/slices/order/orderSlice';
 import { getIngredientsSelector } from '../../../src/services/slices/ingredients/ingredientsSlice';
 
@@ -14,7 +14,7 @@ export const OrderInfo: FC = () => {
   const { number } = useParams();
   const dispatch = useDispatch();
 
-  const orderData = useSelector(orderModalDataSelector);
+  const orderData = useSelector(orderByNumberDataSelector);
 
   const ingredients: TIngredient[] = useSelector(getIngredientsSelector);
 
